@@ -5,6 +5,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import co.com.shopping.cart.commons.ApiError;
 import co.com.shopping.cart.commons.GeneralResponse;
+import co.com.shopping.cart.commons.ServiceException;
 import co.com.shopping.cart.constant.ConstantsEnum;
 import co.com.shopping.cart.dto.ProductDto;
 import co.com.shopping.cart.dto.SaleDetail;
@@ -36,14 +38,19 @@ public class ShoppingCartController {
 	private ShoppingCartService service;
 
 	@PostMapping("/searchProductRequest")
-	public ResponseEntity<GeneralResponse<List<ProductDto>>> searchProductRequest(
+	public ResponseEntity<GeneralResponse<Page<ProductDto>>> searchProductRequest(
 			@RequestBody SearchProductRequest searchProductRequest) {
 		logger.info(" Init searchProductRequest");
 		HttpStatus status = HttpStatus.OK;
-		GeneralResponse<List<ProductDto>> response = new GeneralResponse<>();
+		GeneralResponse<Page<ProductDto>> response = new GeneralResponse<>();
 		try {
 			response.setData(service.searchProductRequest(searchProductRequest));
 			response.setSuccess(true);
+		} catch (ServiceException e) {
+			logger.info(e.getMessage(), e);
+			response.setApiError(e.getApiError());
+			response.setSuccess(false);
+			status = HttpStatus.BAD_REQUEST;
 		} catch (Exception e) {
 			logger.info(e.getMessage(), e);
 			response.setApiError(new ApiError(e.getMessage(), e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.name()));
@@ -51,7 +58,7 @@ public class ShoppingCartController {
 			status = HttpStatus.INTERNAL_SERVER_ERROR;
 		}
 		logger.info("End searchProductRequest");
-		return new ResponseEntity<GeneralResponse<List<ProductDto>>>(response, status);
+		return new ResponseEntity<GeneralResponse<Page<ProductDto>>>(response, status);
 	}
 
 	@GetMapping("/findAll")
@@ -62,6 +69,11 @@ public class ShoppingCartController {
 		try {
 			response.setData(service.findAll());
 			response.setSuccess(true);
+		} catch (ServiceException e) {
+			logger.info(e.getMessage(), e);
+			response.setApiError(e.getApiError());
+			response.setSuccess(false);
+			status = HttpStatus.BAD_REQUEST;
 		} catch (Exception e) {
 			logger.info(e.getMessage(), e);
 			response.setApiError(new ApiError(e.getMessage(), e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.name()));
@@ -80,6 +92,34 @@ public class ShoppingCartController {
 		try {
 			response.setData(service.initShoppingCart(saleDetail));
 			response.setSuccess(true);
+		} catch (ServiceException e) {
+			logger.info(e.getMessage(), e);
+			response.setApiError(e.getApiError());
+			response.setSuccess(false);
+			status = HttpStatus.BAD_REQUEST;
+		} catch (Exception e) {
+			logger.info(e.getMessage(), e);
+			response.setApiError(new ApiError(e.getMessage(), e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.name()));
+			response.setSuccess(false);
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+		}
+		logger.info("End initShoppingCart");
+		return new ResponseEntity<GeneralResponse<ShoppingCart>>(response, status);
+	}
+
+	@PostMapping("/delete-shopping-cart")
+	public ResponseEntity<GeneralResponse<ShoppingCart>> deleteShoppingCart(@RequestBody ShoppingCart shoppingCart) {
+		logger.info(" Init initShoppingCart");
+		HttpStatus status = HttpStatus.OK;
+		GeneralResponse<ShoppingCart> response = new GeneralResponse<>();
+		try {
+			response.setData(service.deleteShoppingCart(shoppingCart));
+			response.setSuccess(true);
+		} catch (ServiceException e) {
+			logger.info(e.getMessage(), e);
+			response.setApiError(e.getApiError());
+			response.setSuccess(false);
+			status = HttpStatus.BAD_REQUEST;
 		} catch (Exception e) {
 			logger.info(e.getMessage(), e);
 			response.setApiError(new ApiError(e.getMessage(), e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.name()));
@@ -98,6 +138,11 @@ public class ShoppingCartController {
 		try {
 			response.setData(service.uploadProduct(file));
 			response.setSuccess(true);
+		} catch (ServiceException e) {
+			logger.info(e.getMessage(), e);
+			response.setApiError(e.getApiError());
+			response.setSuccess(false);
+			status = HttpStatus.BAD_REQUEST;
 		} catch (Exception e) {
 			logger.info(e.getMessage(), e);
 			response.setApiError(new ApiError(e.getMessage(), e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.name()));
@@ -116,6 +161,11 @@ public class ShoppingCartController {
 		try {
 			response.setData(service.saveProduct(product));
 			response.setSuccess(true);
+		} catch (ServiceException e) {
+			logger.info(e.getMessage(), e);
+			response.setApiError(e.getApiError());
+			response.setSuccess(false);
+			status = HttpStatus.BAD_REQUEST;
 		} catch (Exception e) {
 			logger.info(e.getMessage(), e);
 			response.setApiError(new ApiError(e.getMessage(), e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.name()));

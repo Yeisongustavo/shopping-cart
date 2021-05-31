@@ -7,6 +7,9 @@ public class SearchProductRequest {
 	private Integer page;
 	private Integer pageSize;
 	private String name;
+	private Integer startPrice;
+	private Integer finalPrice;
+	private Integer brand;
 
 	public Integer getPage() {
 		return page;
@@ -30,6 +33,30 @@ public class SearchProductRequest {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public Integer getStartPrice() {
+		return startPrice;
+	}
+
+	public void setStartPrice(Integer startPrice) {
+		this.startPrice = startPrice;
+	}
+
+	public Integer getFinalPrice() {
+		return finalPrice;
+	}
+
+	public void setFinalPrice(Integer finalPrice) {
+		this.finalPrice = finalPrice;
+	}
+
+	public Integer getBrand() {
+		return brand;
+	}
+
+	public void setBrand(Integer brand) {
+		this.brand = brand;
 	}
 
 	@Override

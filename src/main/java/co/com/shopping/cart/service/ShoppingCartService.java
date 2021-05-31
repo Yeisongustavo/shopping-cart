@@ -2,6 +2,7 @@ package co.com.shopping.cart.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
 import org.springframework.web.multipart.MultipartFile;
 
 import co.com.shopping.cart.commons.ServiceException;
@@ -18,8 +19,10 @@ public interface ShoppingCartService {
 
 	public ShoppingCart initShoppingCart(SaleDetail saleDetail) throws ServiceException;
 
-	public List<ProductDto> searchProductRequest(SearchProductRequest searchProductRequest) throws ServiceException;
+	public Page<ProductDto> searchProductRequest(SearchProductRequest searchProductRequest) throws ServiceException;
 
 	public List<ProductDto> findAll() throws ServiceException;
+
+	public ShoppingCart deleteShoppingCart(ShoppingCart shoppingCart) throws ServiceException;
 
 }
